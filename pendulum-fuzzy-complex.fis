@@ -1,5 +1,5 @@
 [System]
-Name='pendulum-fuzzy'
+Name='pendulum-fuzzy-complex'
 Type='mamdani'
 Version=2.0
 NumInputs=2
