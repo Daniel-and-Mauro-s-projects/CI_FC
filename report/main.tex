@@ -1,4 +1,4 @@
-\documentclass[11pt]{article}
+\documentclass[12pt]{article}
 \usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{caption}
@@ -17,6 +17,8 @@
 \usepackage{listings}
 \usepackage{wrapfig}
 \usepackage{ragged2e}
+\usepackage{booktabs}
+\usepackage{pgfplots}
 
 \addbibresource{bibliography.bib}
 
@@ -57,13 +59,105 @@
 \label{sec:desig}
 
 \subsection{Membership functions}
-- Error: 
 
-- Error Derivative: 
-TODO comment on how we changed the error derivative to [-15 15] from [-5 5]
-Reason: it was out of bounds, and the fuzzy controller returned 0 in the Simulink simulation
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            ylabel={Degree of Membership},
+            ymin=0, ymax=1.2,
+            xmin=-80, xmax=80,
+            legend style={at={(0.5,-0.15)},anchor=north,legend columns=-1},
+            ymajorgrids=true,
+            xmajorgrids=true,
+            grid style=dashed
+        ]
+        
+        % Negative Membership Function
+        \addplot[solid, blue] coordinates {(-80,0) (-40,1) (0,0)};
+        \addlegendentry{Negative}
+        
+        % Zero Membership Function
+        \addplot[solid, red] coordinates {(-40,0) (0,1) (40,0)};
+        \addlegendentry{Zero}
+        
+        % Positive Membership Function
+        \addplot[solid, orange] coordinates {(0,0) (40,1) (80,0)};
+        \addlegendentry{Positive}
+        
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Membership Functions for Input Variable "Error"}
+\end{figure}
 
-- Thrust: 
+
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            title={Membership Function Plot},
+            ylabel={Degree of Membership},
+            ymin=0, ymax=1.2,
+            xmin=-15, xmax=15,
+            legend style={at={(0.5,-0.15)},anchor=north,legend columns=-1},
+            ymajorgrids=true,
+            xmajorgrids=true,
+            grid style=dashed
+        ]
+        
+        % Decreasing Membership Function
+        \addplot[solid, blue] coordinates {(-15,0) (-5,1) (0,0)};
+        \addlegendentry{Decreasing}
+        
+        % Stationary Membership Function
+        \addplot[solid, red] coordinates {(-5,0) (0,1) (5,0)};
+        \addlegendentry{Stationary}
+        
+        % Increasing Membership Function
+        \addplot[solid, orange] coordinates {(0,0) (5,1) (15,0)};
+        \addlegendentry{Increasing}
+        
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Membership Functions for Input Variable "Error Derivative"}
+\end{figure}
+
+\textbf{Note:}
+The range for the error derivative was modified from the initially proposed values of [-5, 5] to [-15, 15]. This adjustment was necessary because the original range was insufficient, causing the derivative to exceed its bounds. Consequently, the fuzzy controller outputted a value of zero during the Simulink simulation. The revised range provided more accurate and reasonable results.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            title={Membership Function Plot for Output "Thrust"},
+            ylabel={Degree of Membership},
+            ymin=0, ymax=1.2,
+            xmin=-25, xmax=25,
+            legend style={at={(0.5,-0.15)},anchor=north,legend columns=-1},
+            ymajorgrids=true,
+            xmajorgrids=true,
+            grid style=dashed
+        ]
+        
+        % Negative Membership Function
+        \addplot[solid, blue] coordinates {(-45.833,0) (-25,1) (-4.167,0)};
+        \addlegendentry{Negative}
+        
+        % Zero Membership Function
+        \addplot[solid, red] coordinates {(-20.833,0) (0,1) (20.833,0)};
+        \addlegendentry{Zero}
+        
+        % Positive Membership Function
+        \addplot[solid, orange] coordinates {(4.167,0) (25,1) (45.833,0)};
+        \addlegendentry{Positive}
+        
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Membership Functions for Output Variable "Thrust"}
+\end{figure}
+
+
 
 Maybe comment about that defining the lowest (and highest) membership function as a triangle (which decreases after reaching its maximum, if we further decrease it: see screenshot) is not a good idea in our opinion as it is not realistic, but we did it this way to follow the instructions since, it was defined as a triangle in the exercise.
 
@@ -71,22 +165,26 @@ Maybe comment about that defining the lowest (and highest) membership function a
 
 \begin{table}[h!]
     \centering
-    \begin{tabular}{@{}>{\raggedright\arraybackslash}p{12cm}c@{}}
-    \toprule
-    \textbf{Rule} & \textbf{Weight} \\ \midrule
-    If Error is Negative and ErrorDerivative is Decreasing then Thrust is Negative & 1 \\
-    If Error is Zero and ErrorDerivative is Decreasing then Thrust is Negative & 1 \\
-    If Error is Positive and ErrorDerivative is Decreasing then Thrust is Positive & 1 \\
-    If Error is Negative and ErrorDerivative is Stationary then Thrust is Negative & 1 \\
-    If Error is Zero and ErrorDerivative is Stationary then Thrust is Zero & 1 \\
-    If Error is Positive and ErrorDerivative is Stationary then Thrust is Positive & 1 \\
-    If Error is Negative and ErrorDerivative is Increasing then Thrust is Negative & 1 \\
-    If Error is Zero and ErrorDerivative is Increasing then Thrust is Positive & 1 \\
-    If Error is Positive and ErrorDerivative is Increasing then Thrust is Positive & 1 \\ \bottomrule
+    \renewcommand{\arraystretch}{1.25} % Increase vertical space between rows
+    \setlength{\tabcolsep}{10pt}      % Increase horizontal space between columns
+    \begin{tabular}{|p{3cm}|p{4cm}|p{3cm}|p{2cm}|}
+    \hline
+    \textbf{\large Error} & \textbf{\large Error Derivative} & \textbf{\large Thrust} & \textbf{\large Weight} \\ \hline
+    \large Negative       & \large Decreasing                & \large Negative        & \large 1               \\ \hline
+    \large Zero           & \large Decreasing                & \large Negative        & \large 1               \\ \hline
+    \large Positive       & \large Decreasing                & \large Positive        & \large 1               \\ \hline
+    \large Negative       & \large Stationary                & \large Negative        & \large 1               \\ \hline
+    \large Zero           & \large Stationary                & \large Zero            & \large 1               \\ \hline
+    \large Positive       & \large Stationary                & \large Positive        & \large 1               \\ \hline
+    \large Negative       & \large Increasing                & \large Negative        & \large 1               \\ \hline
+    \large Zero           & \large Increasing                & \large Positive        & \large 1               \\ \hline
+    \large Positive       & \large Increasing                & \large Positive        & \large 1               \\ \hline
     \end{tabular}
     \caption{Rules and Corresponding Weights}
     \label{tab:rules}
-    \end{table}
+\end{table}
+    
+    
     
 
 \section{Results}
