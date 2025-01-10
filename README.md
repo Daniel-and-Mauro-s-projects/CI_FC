@@ -1,17 +1,22 @@
-# CI_FC
-Fuzzy computation delivery for the Computational Intelligence subject
+# Compound Pendulum: Fuzzy Control
 
-Usage: 
+This project implements a Mamdani fuzzy inference system (FIS) to stabilize a compound pendulum using MATLAB and Simulink. The fuzzy controller improves transient response and stability compared to an open-loop system.
 
-- Type these to the console:
+## Authors
 
-L = 0.495;
-d = 0.023;
-m = 0.43;
-J = 0.0090;
-c = 0.00035;
-g = 9.80655;
+Mauro Vázquez Chas, Dániel Mácsai
 
-- Save pendulum-fuzzy.fis to the workspace
+## Features
 
-- Type 'simulink' to start the application
+- Design and simulation of a fuzzy logic controller.
+- Membership functions for error, error derivative, and thrust.
+- Rule-based inference system for stabilization.
+- Comparison of basic and enhanced fuzzy controllers.
+
+## Results
+
+The fuzzy controller effectively stabilizes the pendulum, reducing oscillations and improving response time. Enhancing the output variable granularity further improves performance.
+
+## Acknowledgments
+
+Project for *Planning and Approximate Reasoning* (Master in Artificial Intelligence, Universitat Rovira i Virgili).
