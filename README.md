@@ -19,4 +19,4 @@ The fuzzy controller effectively stabilizes the pendulum, reducing oscillations 
 
 ## Acknowledgments
 
-Project for *Planning and Approximate Reasoning* (Master in Artificial Intelligence, Universitat Rovira i Virgili).
+Project for *Computational Intelligence* (Master in Artificial Intelligence, Universitat Politecnica de Catalunya. 
