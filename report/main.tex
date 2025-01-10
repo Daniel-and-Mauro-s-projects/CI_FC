@@ -31,9 +31,9 @@
 \begin{titlepage}
     \centering
     \vspace*{3cm}
-    {\Huge\bfseries Compound Pendulum: a delivery exercise in Fuzzy Computing\par}
+    {\Huge\bfseries Compound Pendulum: A Delivery Exercise in Fuzzy Computing\par}
     \vspace{1.5cm}
-    {\large Mauro VÁZQUEZ CHAS, Dániel MÁCSAI \par}
+    {\large Mauro V\'AZQUEZ CHAS, D\'aniel M\'ACSAI \par}
     \vspace{3cm}
     {\large \textbf{Master in Artificial Intelligence}\par}
     \includegraphics[width=0.4\textwidth]{Logo_UPC.png}\par\vspace{1cm}
@@ -55,23 +55,22 @@
 \section{Introduction}
 \label{sec:introduction}
 
-The compound pendulum, as explored in this exercise, serves as a dynamic representation of robotic arm movement, making it a significant study in control systems and mechanical modeling. It consists of a uniform slender bar with a total mass \( m \) and length \( l \), suspended at a sliding pivot point \( A \). The pivot can be positioned at a distance \( h \) from the center of gravity, providing flexibility in system configurations. This setup, coupled with a motor and propeller, introduces an oscillatory response that requires advanced control techniques for stabilization.
+The compound pendulum models robotic arm movement, important for control systems and mechanical modeling. It consists of a uniform bar with mass \( m \) and length \( l \), suspended at a sliding pivot point \( A \), adjustable by distance \( h \) from the center of gravity. This configuration, combined with a motor and propeller, results in oscillations requiring advanced control for stabilization.
 
-This report focuses on designing and implementing a Mamdani fuzzy inference system (FIS) controller using Simulink and MATLAB's fuzzy toolbox. The objective is to enhance the transient response of the compound pendulum, reducing oscillations and achieving a stable angular position. By analyzing the open-loop response, which demonstrates sustained oscillations, the need for a feedback-based control system becomes evident. The encoder mounted at the pivot point provides real-time angle measurements, which are crucial for the implementation of the control strategies.
+This report focuses on designing a Mamdani fuzzy inference system (FIS) controller using Simulink and MATLAB’s fuzzy toolbox to improve the pendulum’s transient response and stabilize its angular position. The open-loop response shows sustained oscillations, highlighting the need for feedback control. Real-time angle measurements from an encoder are used for implementing control strategies.
 
-The exercise involves defining fuzzy membership functions for error, derivative of error, and thrust variables, formulating a rule base, and simulating the system's behavior under various conditions. This report presents the methodology, results, and insights gained from the fuzzy control implementation, including a comparison with the open-loop system. Furthermore, the potential impact of increasing the granularity of membership functions is examined, providing a comprehensive understanding of the compound pendulum's control dynamics.
-
+The report covers defining fuzzy membership functions for error, error derivative, and thrust, establishing a rule base, and simulating the system’s behavior. It also compares fuzzy control with the open-loop system and explores the impact of refining membership function granularity.
 
 \section{Design of the Fuzzy Controller}
-\label{sec:desig}
+\label{sec:design}
 
-\subsection{Membership functions}
+\subsection{Membership Functions}
 
-Here we provide the membership functions we used for the Fuzzy Controller. We have three input variables: Error, Error Derivative, and one output variable, the Thrust. 
+Here we provide the membership functions we used for the fuzzy controller. We have three input variables: Error, Error Derivative, and one output variable, the Thrust. 
 
 \subsubsection{Error}
 
-The error variable represents the difference between the desired and actual angular position of the pendulum. We followed the instructions and defined the membership functions as detailed in the instructions:
+The error variable represents the difference between the desired and actual angular position of the pendulum. Following the instructions, we defined the membership functions as detailed below:
 
 \begin{figure}[H]
     \centering
@@ -103,7 +102,7 @@ The error variable represents the difference between the desired and actual angu
     \caption{Membership Functions for Input Variable "Error"}
 \end{figure}
 
-We think, that this variable could model reality better, if we would use a trapezoidal membership function for the lowest and highest values, since for example if the error is bigger than 40 degrees, the error is positive, but the corresponding membership function start decreasing. This might influence the activation of some rules involving this variable, and the system might react as if the error is smaller than it actually is. Regardless, we followed the instructions and used a triangle membership function for the lowest and highest values.
+We believe this variable could model reality more accurately using trapezoidal membership functions for the lowest and highest values. For instance, when the error exceeds 40 degrees, the corresponding membership function starts decreasing, which might influence rule activation. However, we adhered to the instructions and used triangular membership functions.
 
 \subsubsection{Error Derivative}
 
@@ -138,8 +137,7 @@ We think, that this variable could model reality better, if we would use a trape
     \caption{Membership Functions for Input Variable "Error Derivative"}
 \end{figure}
 
-The previous observation is also valid for the Error Derivative variable. We used a triangle membership function for the lowest and highest values, but a trapezoidal membership function might be more accurate.
-One additional comment is that when we used the original range of [-5, 5], the derivative frequently exceeded the bounds in the simulation, causing the fuzzy controller to output zero. We adjusted the range to [-15, 15] to obtain more accurate results.
+The same observation applies to the Error Derivative variable. Initially, the range was set to [-5, 5], but during simulations, the derivative often exceeded these bounds, causing the fuzzy controller to output zero. We adjusted the range to [-15, 15] for improved results.
 
 \subsubsection{Thrust}
 
@@ -174,11 +172,11 @@ One additional comment is that when we used the original range of [-5, 5], the d
     \caption{Membership Functions for Output Variable "Thrust"}
 \end{figure}
 
-Since this membership function was not given, we designed it according to our previous observations, making the activation of the Negative and Positive variables the highest at the lowest and highest values, respectively. The three variables are evenly distributed in the given interval ([-25, 25]).
+Since the design of this variable was not provided, we made the Negative and Positive variables activate at the highest levels for the lowest and highest values, respectively. The three variables are evenly distributed across the interval \([-25, 25]\).
 
 \subsection{Rules}
 
-We designed the 9 rules required in the exercise as follows:
+We designed the 9 rules required for this exercise as follows:
 
 \begin{table}[h!]
     \centering
@@ -200,12 +198,12 @@ We designed the 9 rules required in the exercise as follows:
     \caption{Rules and Corresponding Weights}
     \label{tab:rules}
 \end{table}
-    
-When the Error is not \textit{Zero}, the Thrust is set accordingly: if the Error is \textit{Negative}, the Thrust is \textit{Negative}, if the Error is \textit{Positive}, the Thrust is \textit{Positive}. The Error Derivative variable is used to fine-tune the thrust, so if the Error is at the moment \textit{Zero}, but it is \textit{Increasing}, the thrust is \textit{Positive} and if the Error is \textit{decreasing}, the Thrust is \textit{Negative}. If the Error is \textit{Zero}, and it is \textit{Stationary} as well, we set the Thrust is \textit{Zero}.
-    
+
+When the Error is not \textit{Zero}, the Thrust is set accordingly: if the Error is \textit{Negative}, the Thrust is \textit{Negative}; if the Error is \textit{Positive}, the Thrust is \textit{Positive}. The Error Derivative variable is used to fine-tune the Thrust. For instance, if the Error is \textit{Zero} but \textit{Increasing}, the Thrust is \textit{Positive}; if the Error is \textit{Decreasing}, the Thrust is \textit{Negative}. When both Error and Error Derivative are \textit{Zero}, the Thrust is set to \textit{Zero}.
+
 \section{Results}
 
-We ran the simulation for a stop time of 80 seconds with the provided controller and given parameters. The results are shown in the following figures:
+We ran the simulation for a stop time of 80 seconds using the provided controller and parameters. The results are shown in figures \ref{fig:simulation1} and \ref{fig:simulation2}. 
 
 \begin{figure}[h!]
     \centering
@@ -213,7 +211,6 @@ We ran the simulation for a stop time of 80 seconds with the provided controller
     \caption{theta\_ref = 20 and thrust = 0.123}
     \label{fig:simulation1}
 \end{figure}
-\vspace{1cm}
 
 \begin{figure}[h!]
     \centering
@@ -221,7 +218,6 @@ We ran the simulation for a stop time of 80 seconds with the provided controller
     \caption{theta\_ref = -10 and thrust = -0.062}
     \label{fig:simulation2}
 \end{figure}
-\vspace{1cm}
 
 In both cases, our designed control system was able to stabilize the pendulum at the desired angle. We don't see any oscillations, and the system reaches the desired angle in a reasonable time. We can clearly see how the thrust is adjusted according to the error and its derivative. 
 
@@ -299,7 +295,7 @@ To make a change, we need to modify the rules too. Here are the updated rules:
     \label{tab:rules}
 \end{table}
 
-We've ran both simulations with this new controller, and the results are shown in the following figures:
+Both simulations were conducted using the new controller, and the results are presented in the following figures:
 
 \begin{figure}[h!]
     \centering
@@ -307,7 +303,6 @@ We've ran both simulations with this new controller, and the results are shown i
     \caption{theta\_ref = 20 and thrust = 0.123}
     \label{fig:complex1}
 \end{figure}
-\vspace{1cm}
 
 \begin{figure}[h!]
     \centering
@@ -315,13 +310,12 @@ We've ran both simulations with this new controller, and the results are shown i
     \caption{theta\_ref = -10 and thrust = -0.062}
     \label{fig:complex2}
 \end{figure}
-\vspace{1cm}
 
-Initially we thought that to see an improvement we would need to increase the the sensitivity of the input variables with more membership functions and more intricate rules, but we see a huge improvement with changing just the output variable. It reaches the desired angle much faster, while perfectly maintaining stability. Further work could be done to optimize the input variables as well, but the results are already very promising.
+Initially, it was hypothesized that improvements would require increasing the sensitivity of the input variables by incorporating additional membership functions and more complex rules. However, a significant improvement was observed by modifying only the output variable. This adjustment enabled the system to reach the desired angle more rapidly while maintaining stability. While further optimization of the input variables could enhance performance, the current results are already highly promising.
 
 \section{Conclusions}  
 
-In this study, we successfully designed and implemented a Mamdani fuzzy inference system (FIS) to control a compound pendulum, achieving significant improvements in stability and transient response compared to the open-loop system. The fuzzy controller effectively reduced oscillations and achieved the desired angular position, demonstrating robustness and adaptability. By experimenting with enhanced membership functions and a more granular rule base, we observed that increasing the complexity of the output variable improved response speed and stability without requiring additional adjustments to input variables. This highlights the potential of fuzzy logic systems to handle nonlinear control problems efficiently. The results underscore the versatility and practicality of fuzzy computing in real-world dynamic systems.
+    In this study, we successfully designed and implemented a Mamdani fuzzy inference system (FIS) to control a compound pendulum, achieving significant improvements in stability and transient response compared to the open-loop system. The fuzzy controller effectively reduced oscillations and achieved the desired angular position, demonstrating robustness and adaptability. By experimenting with enhanced membership functions and a more granular rule base, we observed that increasing the complexity of the output variable improved response speed and stability without requiring additional adjustments to input variables. This highlights the potential of fuzzy logic systems to handle nonlinear control problems efficiently. The results underscore the versatility and practicality of fuzzy computing in real-world dynamic systems.
 
 \section{Usage of generative AI models}
 
